@@ -1,4 +1,4 @@
-name: Publish to GitHub Packages
+name: Publish to package branch
 
 on:
   push:
@@ -7,8 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  packages: write
+  contents: write
 
 jobs:
   publish:
@@ -38,13 +37,20 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Setup Node for publishing
-        uses: actions/setup-node@v4
-        with:
-          registry-url: https://npm.pkg.github.com
-          scope: "@echodevlab"
+      - name: Publish to package branch
+        run: |
+          # Collect only the published files into a staging directory
+          STAGE=$(mktemp -d)
+          cp -r lib package.json cordis.patch.yml cordis.yml README.md README.zh.md "$STAGE/"
 
-      - name: Publish to GitHub Packages
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Initialize a fresh orphan repo containing only those files
+          cd "$STAGE"
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish ${{ github.ref_name }}"
+
+          # Force-push to the package branch
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git push origin HEAD:refs/heads/package --force

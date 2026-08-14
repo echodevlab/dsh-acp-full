@@ -7,7 +7,7 @@ This package is an out-of-tree companion to dsh (modeled after `dsh-TUI`): it mo
 ## Install
 
 ```sh
-bun add dsh-acp-full
+bun add github:echodevlab/dsh-acp-full#package
 ```
 
 Then mount it in a dsh profile bundle (`dsh-base` + this patch):
@@ -30,9 +30,9 @@ The package ships `cordis.patch.yml` (referenced by `dsh.bundle.patch`) for bund
 
 dsh loads ACP server bundles through **profiles** stored in `~/.dsh/profiles/<name>/`. Each profile is a self-contained directory with `package.json`, `cordis.yml`, and `cordis.patch.yml`. Create one of the following two profiles depending on whether you want the published package or a local checkout.
 
-### A — Released version (GitHub Packages)
+### A — Released version (package branch)
 
-Creates a profile named `acp` that installs `@echodevlab/dsh-acp-full` from GitHub Packages.
+Creates a profile named `acp` that installs `@echodevlab/dsh-acp-full` from the `package` branch (pre-built artifacts committed by CI).
 
 ```sh
 mkdir -p ~/.dsh/profiles/acp
@@ -46,7 +46,7 @@ cd ~/.dsh/profiles/acp
   "name": "dsh-profile-acp",
   "private": true,
   "dependencies": {
-    "@echodevlab/dsh-acp-full": "^0.1.0"
+    "@echodevlab/dsh-acp-full": "github:echodevlab/dsh-acp-full#package"
   },
   "dsh": {
     "profile": {
@@ -57,12 +57,6 @@ cd ~/.dsh/profiles/acp
     }
   }
 }
-```
-
-`.npmrc` (route the `@echodevlab` scope to GitHub Packages):
-
-```
-@echodevlab:registry=https://npm.pkg.github.com
 ```
 
 `cordis.yml` and `cordis.patch.yml` (both empty arrays):
@@ -116,7 +110,7 @@ cd ~/.dsh/profiles/acpdev
 }
 ```
 
-`cordis.yml`, `cordis.patch.yml`, and `pnpm-workspace.yaml` are identical to the released profile above (no `.npmrc` needed).
+`cordis.yml`, `cordis.patch.yml`, and `pnpm-workspace.yaml` are identical to the released profile above.
 
 Install and run:
 
@@ -129,8 +123,8 @@ dsh --profile acpdev
 
 | | `--profile acp` | `--profile acpdev` |
 | --- | --- | --- |
-| Source | GitHub Packages (`@echodevlab/dsh-acp-full`) | Local checkout (`link:...`) |
-| Updates | Requires a new published version | Instant — reuses your working tree |
+| Source | package branch (`@echodevlab/dsh-acp-full`) | Local checkout (`link:...`) |
+| Updates | Requires a new tagged release | Instant — reuses your working tree |
 | Use case | Production, reproducible runs | Development, debugging, testing |
 
 ## Protocol surface

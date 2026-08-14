@@ -7,7 +7,7 @@ DeepSeek Harness (dsh) 的完整 [Agent Client Protocol](https://agentclientprot
 ## 安装
 
 ```sh
-bun add dsh-acp-full
+bun add github:echodevlab/dsh-acp-full#package
 ```
 
 挂载到 dsh profile bundle（`dsh-base` + 本补丁）：
@@ -30,9 +30,9 @@ plugins:
 
 dsh 通过存放在 `~/.dsh/profiles/<名称>/` 的 **profile** 加载 ACP 服务器 bundle。每个 profile 是一个独立目录，包含 `package.json`、`cordis.yml`、`cordis.patch.yml`。按以下两种方式之一创建 profile，取决于你要用已发布包还是本地检出。
 
-### A — 远程发布版（GitHub Packages）
+### A — 远程发布版（package 分支）
 
-创建名为 `acp` 的 profile，从 GitHub Packages 安装 `@echodevlab/dsh-acp-full`。
+创建名为 `acp` 的 profile，从 `package` 分支安装 `@echodevlab/dsh-acp-full`（CI 预构建产物）。
 
 ```sh
 mkdir -p ~/.dsh/profiles/acp
@@ -46,7 +46,7 @@ cd ~/.dsh/profiles/acp
   "name": "dsh-profile-acp",
   "private": true,
   "dependencies": {
-    "@echodevlab/dsh-acp-full": "^0.1.0"
+    "@echodevlab/dsh-acp-full": "github:echodevlab/dsh-acp-full#package"
   },
   "dsh": {
     "profile": {
@@ -57,12 +57,6 @@ cd ~/.dsh/profiles/acp
     }
   }
 }
-```
-
-`.npmrc`（将 `@echodevlab` scope 路由到 GitHub Packages）：
-
-```
-@echodevlab:registry=https://npm.pkg.github.com
 ```
 
 `cordis.yml` 和 `cordis.patch.yml`（均为空数组）：
@@ -116,7 +110,7 @@ cd ~/.dsh/profiles/acpdev
 }
 ```
 
-`cordis.yml`、`cordis.patch.yml`、`pnpm-workspace.yaml` 与发布版相同（无需 `.npmrc`）。
+`cordis.yml`、`cordis.patch.yml`、`pnpm-workspace.yaml` 与发布版相同。
 
 安装并运行：
 
@@ -129,8 +123,8 @@ dsh --profile acpdev
 
 | | `--profile acp` | `--profile acpdev` |
 | --- | --- | --- |
-| 来源 | GitHub Packages（`@echodevlab/dsh-acp-full`） | 本地检出（`link:...`） |
-| 更新 | 需发布新版本 | 即时——复用工作区源码 |
+| 来源 | package 分支（`@echodevlab/dsh-acp-full`） | 本地检出（`link:...`） |
+| 更新 | 需打新 tag 发布 | 即时——复用工作区源码 |
 | 适用场景 | 生产、可复现运行 | 开发、调试、测试 |
 
 ## 协议面
