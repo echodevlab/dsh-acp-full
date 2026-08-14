@@ -4,6 +4,10 @@
   "description": "Full-featured Agent Client Protocol server for DeepSeek Harness: ACP v1 + experimental v2 draft over one stdio connection",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/echodevlab/dsh-acp-full.git"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://npm.pkg.github.com"
