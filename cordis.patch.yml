@@ -10,4 +10,4 @@
       config:
         default: standard
     - id: acp-full
-      name: 'dsh-acp-full'
+      name: '@echodevlab/dsh-acp-full'
