@@ -1,0 +1,31 @@
+# 依赖
+node_modules/
+
+# 构建产物
+lib/
+dist/
+build/
+*.tsbuildinfo
+
+# 环境与密钥
+.env
+.env.*
+*.pem
+*.key
+
+# 日志
+*.log
+logs/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.swp
+*.swo
