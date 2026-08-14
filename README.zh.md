@@ -26,6 +26,113 @@ plugins:
 
 包内置 `cordis.patch.yml`（由 `dsh.bundle.patch` 引用）用于 bundle-patch 组合；按你的 provider 路由修改。
 
+## 通过 dsh profile 使用
+
+dsh 通过存放在 `~/.dsh/profiles/<名称>/` 的 **profile** 加载 ACP 服务器 bundle。每个 profile 是一个独立目录，包含 `package.json`、`cordis.yml`、`cordis.patch.yml`。按以下两种方式之一创建 profile，取决于你要用已发布包还是本地检出。
+
+### A — 远程发布版（GitHub Packages）
+
+创建名为 `acp` 的 profile，从 GitHub Packages 安装 `@echodevlab/dsh-acp-full`。
+
+```sh
+mkdir -p ~/.dsh/profiles/acp
+cd ~/.dsh/profiles/acp
+```
+
+`package.json`：
+
+```json
+{
+  "name": "dsh-profile-acp",
+  "private": true,
+  "dependencies": {
+    "@echodevlab/dsh-acp-full": "^0.1.0"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@echodevlab/dsh-acp-full"
+      ]
+    }
+  }
+}
+```
+
+`.npmrc`（将 `@echodevlab` scope 路由到 GitHub Packages）：
+
+```
+@echodevlab:registry=https://npm.pkg.github.com
+```
+
+`cordis.yml` 和 `cordis.patch.yml`（均为空数组）：
+
+```yaml
+[]
+```
+
+`pnpm-workspace.yaml`：
+
+```yaml
+packages:
+  - .
+nodeLinker: hoisted
+autoInstallPeers: false
+```
+
+安装并运行：
+
+```sh
+pnpm install
+dsh --profile acp
+```
+
+### B — 本地开发版（link 检出）
+
+创建名为 `acpdev` 的 profile，链接本地源码目录，编辑代码即时生效。
+
+```sh
+mkdir -p ~/.dsh/profiles/acpdev
+cd ~/.dsh/profiles/acpdev
+```
+
+`package.json`（注意 `link:` 依赖与无 scope 的 bundle 名）：
+
+```json
+{
+  "name": "dsh-profile-acpdev",
+  "private": true,
+  "dependencies": {
+    "dsh-acp-full": "link:/你的路径/dsh-acp-full"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "dsh-acp-full"
+      ]
+    }
+  }
+}
+```
+
+`cordis.yml`、`cordis.patch.yml`、`pnpm-workspace.yaml` 与发布版相同（无需 `.npmrc`）。
+
+安装并运行：
+
+```sh
+pnpm install
+dsh --profile acpdev
+```
+
+### 两种 profile 的选择
+
+| | `--profile acp` | `--profile acpdev` |
+| --- | --- | --- |
+| 来源 | GitHub Packages（`@echodevlab/dsh-acp-full`） | 本地检出（`link:...`） |
+| 更新 | 需发布新版本 | 即时——复用工作区源码 |
+| 适用场景 | 生产、可复现运行 | 开发、调试、测试 |
+
 ## 协议面
 
 连接路由器读取客户端的 `initialize` 请求后，把该连接分派给 v1 或 v2 处理器。两个处理器共享同一个连接核心，核心建立在 dsh 的 durable session 事件流之上。

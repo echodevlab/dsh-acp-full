@@ -26,6 +26,113 @@ plugins:
 
 The package ships `cordis.patch.yml` (referenced by `dsh.bundle.patch`) for bundle-patch composition; edit it to match your provider routes.
 
+## Usage with dsh profiles
+
+dsh loads ACP server bundles through **profiles** stored in `~/.dsh/profiles/<name>/`. Each profile is a self-contained directory with `package.json`, `cordis.yml`, and `cordis.patch.yml`. Create one of the following two profiles depending on whether you want the published package or a local checkout.
+
+### A — Released version (GitHub Packages)
+
+Creates a profile named `acp` that installs `@echodevlab/dsh-acp-full` from GitHub Packages.
+
+```sh
+mkdir -p ~/.dsh/profiles/acp
+cd ~/.dsh/profiles/acp
+```
+
+`package.json`:
+
+```json
+{
+  "name": "dsh-profile-acp",
+  "private": true,
+  "dependencies": {
+    "@echodevlab/dsh-acp-full": "^0.1.0"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@echodevlab/dsh-acp-full"
+      ]
+    }
+  }
+}
+```
+
+`.npmrc` (route the `@echodevlab` scope to GitHub Packages):
+
+```
+@echodevlab:registry=https://npm.pkg.github.com
+```
+
+`cordis.yml` and `cordis.patch.yml` (both empty arrays):
+
+```yaml
+[]
+```
+
+`pnpm-workspace.yaml`:
+
+```yaml
+packages:
+  - .
+nodeLinker: hoisted
+autoInstallPeers: false
+```
+
+Install and run:
+
+```sh
+pnpm install
+dsh --profile acp
+```
+
+### B — Local development version (linked checkout)
+
+Creates a profile named `acpdev` that links your local source tree, so edits take effect immediately.
+
+```sh
+mkdir -p ~/.dsh/profiles/acpdev
+cd ~/.dsh/profiles/acpdev
+```
+
+`package.json` (note the `link:` dependency and the unscoped bundle name):
+
+```json
+{
+  "name": "dsh-profile-acpdev",
+  "private": true,
+  "dependencies": {
+    "dsh-acp-full": "link:/path/to/dsh-acp-full"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "dsh-acp-full"
+      ]
+    }
+  }
+}
+```
+
+`cordis.yml`, `cordis.patch.yml`, and `pnpm-workspace.yaml` are identical to the released profile above (no `.npmrc` needed).
+
+Install and run:
+
+```sh
+pnpm install
+dsh --profile acpdev
+```
+
+### Choosing between the two
+
+| | `--profile acp` | `--profile acpdev` |
+| --- | --- | --- |
+| Source | GitHub Packages (`@echodevlab/dsh-acp-full`) | Local checkout (`link:...`) |
+| Updates | Requires a new published version | Instant — reuses your working tree |
+| Use case | Production, reproducible runs | Development, debugging, testing |
+
 ## Protocol surface
 
 The connection router reads the client's `initialize` request and dispatches to the v1 or v2 handler for that connection. Both handlers share one connection core over dsh's durable session event feed.
