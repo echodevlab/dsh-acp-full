@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "sources": ["../src/invariant.ts"],
+  "sourcesContent": [
+    "/** Package-owned invariant companion for `dsh-acp-full`. @module dsh-acp-full/invariant */\n\nimport type { Context } from '@deepseek-ai/cordis'\nimport type { InvariantInstaller } from '@deepseek-ai/dsh-invariants'\n\nconst PACKAGE_NAME = 'dsh-acp-full'\n\n/** Cordis companion plugin name. */\nexport const name = 'dsh-acp-full-invariant'\n\n/** Service required before package ownership can be reserved. */\nexport const inject = ['invariants']\n\n/** No runtime invariant: this plugin produces no durable session events and owns no event/data relation; protocol framing is validated by the ACP SDK's wire parser. */\nconst install: InvariantInstaller = () => {}\n\n/**\n * Register the package invariant companion.\n * @param ctx - Cordis context carrying the invariant service.\n * @returns the registration disposer.\n */\nexport const apply = (ctx: Context): Promise<() => void> => Promise.resolve(ctx.invariants.register(PACKAGE_NAME, install))\n"
+  ],
+  "mappings": ";AAKA,IAAM,eAAe;AAGd,IAAM,OAAO;AAGb,IAAM,SAAS,CAAC,YAAY;AAGnC,IAAM,UAA8B,MAAM;AAOnC,IAAM,QAAQ,CAAC,QAAsC,QAAQ,QAAQ,IAAI,WAAW,SAAS,cAAc,OAAO,CAAC;",
+  "debugId": "A004E8C80892466864756E2164756E21",
+  "names": []
+}

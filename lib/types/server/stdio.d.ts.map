@@ -1,0 +1,1 @@
+{"version":3,"file":"stdio.d.ts","sourceRoot":"","sources":["../../../src/server/stdio.ts"],"names":[],"mappings":"AAAA,sDAAsD;AAGtD,OAAO,KAAK,EAAE,wBAAwB,EAAE,mBAAmB,EAAE,MAAM,IAAI,UAAU,EAAE,MAAM,0CAA0C,CAAA;AAEnI;;;;;GAKG;AACH,wBAAgB,YAAY,IAAI,mBAAmB,CAElD;AAED;;;GAGG;AACH,wBAAgB,eAAe,IAAI,UAAU,CA6B5C;AAED,2BAA2B;AAC3B,YAAY,EAAE,wBAAwB,EAAE,CAAA"}

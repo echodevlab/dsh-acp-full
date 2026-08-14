@@ -1,0 +1,3 @@
+# Root config placeholder for `dsh --config cordis.yml` runs.
+# Real composition comes from the bundle patch stack; see README.zh.md.
+[]

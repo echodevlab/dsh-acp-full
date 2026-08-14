@@ -1,0 +1,13 @@
+# dsh-acp-full bundle patch: mount the full ACP server over dsh-base.
+#
+# Layered on top of `dsh-base` by the profile bundle mechanism (see
+# README.zh.md). The `dsh.bundle.patch` entry in package.json points here.
+# provider/model/maxTokens are all optional; delete the config block to let
+# the profile's own model selection decide.
+- insert:
+    - id: agent-presets
+      name: '@deepseek-ai/dsh-agent-presets'
+      config:
+        default: standard
+    - id: acp-full
+      name: '@echodevlab/dsh-acp-full'
